@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>💌 DearGift - Gửi lời yêu thương</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #ffafcc, #ffc8dd, #bde0fe);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 500px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 25px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            padding: 30px;
+            backdrop-filter: blur(10px);
+        }
+
+        .slide {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .slide.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h1, h2 {
+            color: #ff4d8d;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            font-size: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        h2 {
+            font-size: 28px;
+        }
+
+        .message-box {
+            background: linear-gradient(135deg, #fff5f7, #ffe8ec);
+            border-radius: 20px;
+            padding: 25px;
+            margin: 25px 0;
+            border: 2px dashed #ff8ab5;
+            text-align: center;
+        }
+
+        .simple-message {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: center;
+            border-left: 5px solid #ff4d8d;
+        }
+
+        p {
+            color: #555;
+            line-height: 1.6;
+            margin-bottom: 15px;
+            font-size: 17px;
+        }
+
+        .highlight-text {
+            font-size: 20px;
+            color: #ff4d8d;
+            font-weight: 600;
+            margin: 20px 0;
+        }
+
+        button {
+            background: linear-gradient(135deg, #ff4d8d, #ff8ab5);
+            color: white;
+            border: none;
+            padding: 16px 32px;
+            border-radius: 50px;
+            font-size: 17px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: block;
+            width: 100%;
+            margin: 15px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(255, 77, 141, 0.3);
+        }
+
+        .response-btn {
+            background: white;
+            color: #333;
+            border: 2px solid #e0e0e0;
+            margin: 8px 0;
+        }
+
+        .response-btn.yes:hover {
+            background: #06d6a0;
+            color: white;
+            border-color: #06d6a0;
+        }
+
+        .response-btn.no:hover {
+            background: #ef476f;
+            color: white;
+            border-color: #ef476f;
+        }
+
+        .response-btn.maybe:hover {
+            background: #ffd166;
+            color: #333;
+            border-color: #ffd166;
+        }
+
+        textarea, input {
+            width: 100%;
+            padding: 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 15px;
+            font-size: 16px;
+            font-family: inherit;
+            margin: 12px 0;
+            transition: all 0.3s ease;
+        }
+
+        textarea:focus, input:focus {
+            outline: none;
+            border-color: #ff4d8d;
+            box-shadow: 0 0 0 3px rgba(255, 77, 141, 0.1);
+        }
+
+        textarea {
+            height: 120px;
+            resize: vertical;
+        }
+
+        .notification {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #333;
+            color: white;
+            padding: 15px 25px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+
+        .notification.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .progress-bar {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        .progress-bar:before {
+            content: '';
+            position: absolute;
+            top: 20px;
+            left: 30px;
+            right: 30px;
+            height: 4px;
+            background: #e0e0e0;
+            z-index: 1;
+        }
+
+        .step {
+            text-align: center;
+            z-index: 2;
+            position: relative;
+        }
+
+        .step .circle {
+            width: 40px;
+            height: 40px;
+            background: #e0e0e0;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 auto 10px;
+            color: white;
+            font-weight: bold;
+            font-size: 18px;
+            transition: all 0.3s ease;
+        }
+
+        .step.active .circle {
+            background: #ff4d8d;
+            transform: scale(1.1);
+            box-shadow: 0 5px 15px rgba(255, 77, 141, 0.4);
+        }
+
+        .heart-animation {
+            font-size: 60px;
+            color: #ff4d8d;
+            margin: 20px 0;
+            animation: heartbeat 1.5s infinite;
+        }
+
+        @keyframes heartbeat {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .thank-you-section {
+            text-align: center;
+            padding: 20px 0;
+        }
+
+        .final-message {
+            font-size: 18px;
+            color: #666;
+            margin: 20px 0;
+            line-height: 1.6;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+                border-radius: 20px;
+            }
+            
+            h1 {
+                font-size: 28px;
+            }
+            
+            h2 {
+                font-size: 24px;
+            }
+            
+            .heart-animation {
+                font-size: 50px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Progress Bar -->
+        <div class="progress-bar">
+            <div class="step active" data-step="1">
+                <div class="circle">1</div>
+                <p>Lời chào</p>
+            </div>
+            <div class="step" data-step="2">
+                <div class="circle">2</div>
+                <p>Trả lời</p>
+            </div>
+            <div class="step" data-step="3">
+                <div class="circle">3</div>
+                <p>Cảm ơn</p>
+            </div>
+        </div>
+
+        <!-- Slide 1: Greeting -->
+        <div class="slide active" id="slide1">
+            <div class="content">
+                <h1><i class="fas fa-heart"></i> Xin chào!</h1>
+                
+                <div class="message-box">
+                    <p>💌 Có một lời tỏ tình đặc biệt dành cho bạn...</p>
+                    <p>Hãy trả lời bằng trái tim chân thành nhất 💖</p>
+                </div>
+
+                <p style="text-align: center; color: #666;">
+                    <i class="fas fa-info-circle"></i>
+                    Câu trả lời của bạn sẽ được gửi đến người gửi
+                </p>
+
+                <button onclick="nextSlide()">
+                    Bắt đầu <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Slide 2: Question -->
+        <div class="slide" id="slide2">
+            <div class="content">
+                <h2><i class="fas fa-question-circle"></i> Câu hỏi đặc biệt</h2>
+                
+                <div class="message-box">
+                    <p style="font-size: 22px; font-weight: 600; color: #ff4d8d;">
+                        "Bạn có muốn làm người yêu tôi không?" 💘
+                    </p>
+                </div>
+
+                <div class="response-buttons">
+                    <button class="response-btn yes" onclick="selectAnswer('yes')">
+                        <i class="fas fa-heart"></i> Có, tôi đồng ý! 💖
+                    </button>
+                    <button class="response-btn no" onclick="selectAnswer('no')">
+                        <i class="fas fa-times"></i> Không, xin lỗi 💔
+                    </button>
+                    <button class="response-btn maybe" onclick="selectAnswer('maybe')">
+                        <i class="fas fa-thinking"></i> Để tôi suy nghĩ... 🤔
+                    </button>
+                </div>
+
+                <textarea id="userMessage" placeholder="Muốn nói thêm điều gì với người gửi không? (tuỳ chọn)" maxlength="300"></textarea>
+                
+                <input type="text" id="userName" placeholder="Tên hoặc biệt danh của bạn (bắt buộc)" required>
+
+                <button onclick="submitResponse()" id="submitBtn">
+                    <i class="fas fa-paper-plane"></i> Gửi câu trả lời
+                </button>
+
+                <p style="text-align: center; color: #666; font-size: 14px; margin-top: 15px;">
+                    <i class="fas fa-lock"></i> Tin nhắn được gửi an toàn
+                </p>
+            </div>
+        </div>
+
+        <!-- Slide 3: Thank You (ĐƠN GIẢN) -->
+        <div class="slide" id="slide3">
+            <div class="thank-you-section">
+                <div class="heart-animation">
+                    <i class="fas fa-heart"></i>
+                </div>
+                
+                <h2>Cảm ơn bạn! 💝</h2>
+                
+                <div class="simple-message">
+                    <p class="highlight-text" id="thankYouMessage">
+                        Cảm ơn bạn đã trả lời câu hỏi!
+                    </p>
+                    <p class="final-message">
+                        Người gửi đã nhận được câu trả lời của bạn. 
+                        Hy vọng đây là khởi đầu đẹp cho một câu chuyện mới 💕
+                    </p>
+                </div>
+
+                <div class="reply-section">
+                    <h3><i class="fas fa-reply"></i> Muốn gửi thêm lời nhắn?</h3>
+                    <textarea id="replyMessage" placeholder="Viết lời nhắn phản hồi cho người gửi..."></textarea>
+                    
+                    <button onclick="sendReply()">
+                        <i class="fas fa-share"></i> Gửi lời nhắn
+                    </button>
+                </div>
+
+                <div class="final-actions" style="margin-top: 30px;">
+                    <button onclick="shareLink()" style="background: #4a5568;">
+                        <i class="fas fa-share-alt"></i> Chia sẻ trang này
+                    </button>
+                    <button onclick="createYourOwn()" style="background: #ff9800; margin-top: 10px;">
+                        <i class="fas fa-plus"></i> Tạo trang của riêng bạn
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification -->
+    <div class="notification" id="notification"></div>
+
+    <script>
+        // ============ CẤU HÌNH TELEGRAM CỦA BẠN ============
+        const TELEGRAM_CONFIG = {
+            botToken: "8503904022:AAElyplbto709iklzz6qRTAhnszWjMj_-1Q",  // TOKEN CỦA BẠN
+            chatId: "5787223699",  // CHAT ID CỦA BẠN
+            enabled: true
+        };
+        
+        // ============ BIẾN TOÀN CỤC ============
+        let currentSlide = 1;
+        let selectedAnswer = '';
+        
+        // ============ ĐIỀU HƯỚNG ============
+        function nextSlide() {
+            if (currentSlide < 3) {
+                document.getElementById(`slide${currentSlide}`).classList.remove('active');
+                document.querySelector(`.step[data-step="${currentSlide}"]`).classList.remove('active');
+                
+                currentSlide++;
+                
+                document.getElementById(`slide${currentSlide}`).classList.add('active');
+                document.querySelector(`.step[data-step="${currentSlide}"]`).classList.add('active');
+            }
+        }
+        
+        // ============ CHỌN CÂU TRẢ LỜI ============
+        function selectAnswer(answer) {
+            selectedAnswer = answer;
+            
+            // Reset tất cả button
+            document.querySelectorAll('.response-btn').forEach(btn => {
+                btn.style.opacity = '0.6';
+                btn.style.transform = 'scale(0.95)';
+            });
+            
+            // Highlight button được chọn
+            const selectedBtn = event.target.closest('button');
+            selectedBtn.style.opacity = '1';
+            selectedBtn.style.transform = 'scale(1.05)';
+            selectedBtn.style.boxShadow = '0 5px 15px rgba(0,0,0,0.2)';
+            
+            showNotification('Đã chọn câu trả lời!');
+        }
+        
+        // ============ GỬI ĐẾN TELEGRAM ============
+        async function sendToTelegram(message) {
+            if (!TELEGRAM_CONFIG.enabled) return false;
+            
+            try {
+                const url = `https://api.telegram.org/bot${TELEGRAM_CONFIG.botToken}/sendMessage`;
+                
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        chat_id: TELEGRAM_CONFIG.chatId,
+                        text: message,
+                        parse_mode: 'HTML',
+                        disable_web_page_preview: true
+                    })
+                });
+                
+                const result = await response.json();
+                return result.ok;
+                
+            } catch (error) {
+                console.error('Lỗi gửi Telegram:', error);
+                return false;
+            }
+        }
+        
+        function getAnswerEmoji(answer) {
+            const emojis = {
+                'yes': '💖',
+                'no': '💔',
+                'maybe': '🤔'
+            };
+            return emojis[answer] || '💌';
+        }
+        
+        function getAnswerText(answer) {
+            const texts = {
+                'yes': 'CÓ - ĐỒNG Ý! 🎉',
+                'no': 'KHÔNG',
+                'maybe': 'SUY NGHĨ THÊM...'
+            };
+            return texts[answer] || 'Không xác định';
+        }
+        
+        // ============ GỬI CÂU TRẢ LỜI ============
+        async function submitResponse() {
+            const userName = document.getElementById('userName').value.trim();
+            const message = document.getElementById('userMessage').value.trim();
+            
+            // Kiểm tra input
+            if (!userName) {
+                showNotification('Vui lòng nhập tên của bạn!', 'error');
+                return;
+            }
+            
+            if (!selectedAnswer) {
+                showNotification('Vui lòng chọn câu trả lời!', 'error');
+                return;
+            }
+            
+            // Tạo dữ liệu
+            const responseData = {
+                userName: userName,
+                answer: selectedAnswer,
+                message: message,
+                timestamp: new Date().toLocaleString('vi-VN')
+            };
+            
+            // Hiển thị loading
+            const submitBtn = document.getElementById('submitBtn');
+            const originalText = submitBtn.innerHTML;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Đang gửi...';
+            submitBtn.disabled = true;
+            
+            // Tạo tin nhắn cho Telegram
+            const telegramMessage = `
+<b>💌 CÓ NGƯỜI TRẢ LỜI!</b>
+
+👤 <b>Tên:</b> ${userName}
+${getAnswerEmoji(selectedAnswer)} <b>Câu trả lời:</b> ${getAnswerText(selectedAnswer)}
+${message ? `📝 <b>Lời nhắn thêm:</b>\n${message}\n` : ''}
+⏰ <b>Thời gian:</b> ${responseData.timestamp}
+            `.trim();
+            
+            // Gửi đến Telegram
+            const telegramSent = await sendToTelegram(telegramMessage);
+            
+            if (telegramSent) {
+                showNotification('Đã gửi thành công!', 'success');
+                
+                // Cập nhật thông điệp cảm ơn
+                updateThankYouMessage(userName, selectedAnswer, message);
+                
+                // Chuyển slide sau 1 giây
+                setTimeout(() => {
+                    nextSlide();
+                    submitBtn.innerHTML = originalText;
+                    submitBtn.disabled = false;
+                }, 1000);
+                
+            } else {
+                showNotification('Gửi thất bại, vui lòng thử lại', 'error');
+                submitBtn.innerHTML = originalText;
+                submitBtn.disabled = false;
+            }
+        }
+        
+        function updateThankYouMessage(userName, answer, extraMessage) {
+            const thankYouMessage = document.getElementById('thankYouMessage');
+            
+            let responseText = '';
+            switch(answer) {
+                case 'yes':
+                    responseText = `💖 Cảm ơn ${userName} đã đồng ý! Đây thật là tin vui!`;
+                    break;
+                case 'no':
+                    responseText = `😢 Cảm ơn ${userName} đã thành thật trả lời.`;
+                    break;
+                case 'maybe':
+                    responseText = `🤔 Cảm ơn ${userName} đã cân nhắc câu trả lời.`;
+                    break;
+            }
+            
+            thankYouMessage.innerHTML = responseText;
+            
+            // Nếu có lời nhắn thêm
+            if (extraMessage) {
+                const finalMessage = document.querySelector('.final-message');
+                finalMessage.innerHTML = `
+                    Với lời nhắn: <em>"${extraMessage}"</em><br><br>
+                    Người gửi đã nhận được tất cả và rất trân trọng câu trả lời của bạn 💕
+                `;
+            }
+        }
+        
+        // ============ GỬI PHẢN HỒI ============
+        async function sendReply() {
+            const reply = document.getElementById('replyMessage').value.trim();
+            
+            if (!reply) {
+                showNotification('Vui lòng nhập lời nhắn!', 'error');
+                return;
+            }
+            
+            const replyMessage = `
+<b>💌 PHẢN HỒI TỪ NGƯỜI TRẢ LỜI:</b>
+
+📝 <b>Lời nhắn:</b>
+${reply}
+
+⏰ <b>Thời gian:</b> ${new Date().toLocaleString('vi-VN')}
+            `.trim();
+            
+            const sent = await sendToTelegram(replyMessage);
+            
+            if (sent) {
+                showNotification('Đã gửi phản hồi!', 'success');
+                document.getElementById('replyMessage').value = '';
+                
+                // Hiển thị thông báo thành công
+                const replySection = document.querySelector('.reply-section');
+                replySection.innerHTML = `
+                    <div style="text-align: center; color: #06d6a0; padding: 20px;">
+                        <i class="fas fa-check-circle" style="font-size: 40px;"></i>
+                        <h3>Đã gửi lời nhắn!</h3>
+                        <p>Người gửi sẽ rất vui khi nhận được phản hồi của bạn</p>
+                    </div>
+                `;
+            } else {
+                showNotification('Gửi phản hồi thất bại', 'error');
+            }
+        }
+        
+        // ============ CÁC CHỨC NĂNG KHÁC ============
+        function shareLink() {
+            const url = window.location.href;
+            
+            if (navigator.share) {
+                navigator.share({
+                    title: '💌 Lời tỏ tình đặc biệt',
+                    text: 'Ai đó muốn gửi bạn lời tỏ tình!',
+                    url: url
+                });
+            } else {
+                navigator.clipboard.writeText(url).then(() => {
+                    showNotification('Đã copy link!', 'success');
+                });
+            }
+        }
+        
+        function createYourOwn() {
+            showNotification('Tính năng đang phát triển!', 'info');
+        }
+        
+        // ============ THÔNG BÁO ============
+        function showNotification(message, type = 'info') {
+            const notification = document.getElementById('notification');
+            
+            // Màu sắc theo type
+            const colors = {
+                success: '#28a745',
+                error: '#dc3545',
+                warning: '#ffc107',
+                info: '#17a2b8'
+            };
+            
+            notification.style.background = colors[type] || colors.info;
+            notification.textContent = message;
+            
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+        
+        // ============ KIỂM TRA CẤU HÌNH ============
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Website DearGift đã sẵn sàng!');
+            console.log('Telegram Bot: @deargift_bot');
+            console.log('Chat ID:', TELEGRAM_CONFIG.chatId);
+            
+            // Tự động focus vào ô tên khi vào slide 2
+            const observer = new MutationObserver(function(mutations) {
+                mutations.forEach(function(mutation) {
+                    if (mutation.target.id === 'slide2' && mutation.target.classList.contains('active')) {
+                        document.getElementById('userName').focus();
+                    }
+                });
+            });
+            
+            observer.observe(document.getElementById('slide2'), {
+                attributes: true,
+                attributeFilter: ['class']
+            });
+        });
+    </script>
+</body>
+</html>
